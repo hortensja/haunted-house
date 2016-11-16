@@ -1,31 +1,31 @@
-from graph import Graph, Vertex
+from graph import Graph, Vertex, Edge
 
 DIRS = {"N": -4, "S": 4, "E": 1, "W": -1}
+BLOCKED = (("N", "W"), ("N",), ("N",), ("N", "E"), ("W"), (), (), ("E",), ("W"), (), (), ("E",), ("W", "S"), ("S",), ("S",), ("S", "E"))
 EXIT = "N"
 
 def checkio(house, stephan, ghost):
 
 
-    graphize_house(house)
+    graph = graphize_house(house)
+    #print(graph)
+
+    print(graph.bfs(graph.get_vertex(stephan-1)))
+
     return "N" or "S" or "W" or "E"
 
 
 
 def graphize_house(house):
     graph = Graph()
-    vertices = []
-    edges = []
-    for i in range(1,17):
-        vertices.append(Vertex(i))
+    for i in range(16):
         graph.add_vertex(Vertex(i))
-    for h in house:
-        print(h, house.index(h))
-        room = house.index(h)+1
-        #print("room: ",room)
-        open = filter(lambda x: x not in h, DIRS)
+    for no, h in enumerate(house):
+        open = filter(lambda x: x not in h and x not in BLOCKED[no], DIRS)
         for o in open:
-            pass#print(o)
-
+            edge = Edge((no, no+DIRS.get(o)))
+            graph.add_edge(edge)
+    return graph
 
 if __name__ == '__main__':
     #This part is using only for self-checking and not necessary for auto-testing
